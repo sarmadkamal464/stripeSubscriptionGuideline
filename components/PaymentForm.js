@@ -12,19 +12,6 @@ function PaymentForm() {
   const [email, setEmail] = useState("");
   const stripe = useStripe();
   const elements = useElements();
-  const [transactions, setTransactions] = useState([]);
-  
-  const handleMyTransactions = async () => {
-    const response = await fetch("/api/transactions", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    console.log("response", data);
-    setTransactions(data);
-  };
 
   const createSubscription = async () => {
     try {
@@ -53,7 +40,7 @@ function PaymentForm() {
       alert("Payment failed! " + err.message);
     }
   };
- 
+
   return (
     <div style={{ width: "40%" }}>
       Name:{" "}
@@ -70,25 +57,10 @@ function PaymentForm() {
         onChange={(e) => setEmail(e.target.value)}
       />
       <br />
-      <CardElement
-        className="w-full p-3 border border-gray-300 rounded-lg"
-      />
+      <CardElement className="w-full p-3 border border-gray-300 rounded-lg" />
       <br />
       <button onClick={createSubscription}>Subscribe - 5 USD</button>
       <br />
-      <button onClick={handleMyTransactions}>My Transactions</button>
-      <br />
-      <div>
-        <h1>Transaction History</h1>
-        {transactions.map((transaction) => (
-          <div key={transaction.id}>
-            <p>
-              Date: {new Date(transaction.created * 1000).toLocaleDateString()}
-            </p>
-            <p>Amount: {transaction.amount}</p>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
